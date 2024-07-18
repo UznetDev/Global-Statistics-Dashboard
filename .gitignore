@@ -1,0 +1,6 @@
+env
+.command
+env/
+.command/
+env/*
+.command/*
