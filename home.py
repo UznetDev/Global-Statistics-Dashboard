@@ -2,7 +2,7 @@ import streamlit as st
 import altair as alt
 import plotly.express as px
 from loader import data, data_2023
-from function import make_donut, wrete_stream_text, make_heatmap, abbreviate_number
+from function import make_donut, write_stream_text, make_heatmap, abbreviate_number
 
 
 st.set_page_config(
@@ -18,8 +18,8 @@ alt.themes.enable("dark")
 st.header('This is a Global Statistics Dashboard', divider='rainbow')
 st.header('World economics and :blue[population] :sunglasses:')
 
-text = "Dunyo buyicha 2022 yil va 2023 yil uzgarish kursatgichi foizda"
-st.write_stream(wrete_stream_text(text, 0.2))
+text = "Global indicators of change in 2022 and 2023 in percentage"
+st.write_stream(write_stream_text(text, 0.2))
 
 d_2022 = data[data['Year'] == 2021]['debt'].sum()
 d_2023 = data[data['Year'] == 2023]['debt'].sum()
@@ -77,8 +77,8 @@ histogram = px.histogram(pie_df,
                          color_discrete_sequence=px.colors.qualitative.Set3)
 
 
-text = "Populatsion buyicha mintaqa va davlatlar reytingi va ulushi."
-st.write_stream(wrete_stream_text(text, 0.2))
+text = "Regional and country population rankings and shares."
+st.write_stream(write_stream_text(text, 0.2))
 
 col1, col2 = st.columns(2, gap='small')
 

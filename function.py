@@ -69,7 +69,7 @@ def make_donut(input_response, input_text, input_color=None):
     return plot_bg + plot + text
 
 
-def wrete_stream_text(text, sped=0.02):
+def write_stream_text(text, sped=0.02):
     for word in text.split(" "):
         yield word + " "
         time.sleep(sped)

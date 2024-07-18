@@ -14,7 +14,7 @@ st.set_page_config(
 )
 
 
-st.title('Mamlakatlar iqtisodiy ko\'rsatkichlari dashboardi')
+st.title('Global Economic Indicators Dashboard')
 my_data = data.copy()
 my_data['debt'] = my_data['debt'].fillna(0)
 
@@ -74,7 +74,7 @@ def stream_data():
         st.write(re_dat[['Year', column, 'Growth Rate (%)']])
         # st.write(re.count())
         if re.count() < 53:
-            text = "\nMa'lumotlar biroz kam ekan bu aniqlikni pasaytirishi mumkin!\n"
+            text = "\nThe information is a bit sparse; this might reduce accuracy!\n"
             for word in text.split(" "):
                 yield word + " "
                 time.sleep(0.02)
@@ -112,7 +112,7 @@ def stream_data():
 
     else:
         time.sleep(1)
-        text = f'\nAfsus {country} haqida ma\'lumot juda kam eltimos boshqa mamlakatni tanlang!'
+        text = f'\nSorry, the information about {country} is very limited. Please choose another country!'
         for word in text.split(" "):
             yield word + " "
             time.sleep(0.02)
