@@ -1,7 +1,7 @@
 import streamlit as st
 import plotly.express as px
 from loader import data, data_2023
-from function import make_donut, wrete_stream_text
+from function import make_donut, write_stream_text
 from sklearn.preprocessing import MinMaxScaler
 
 
@@ -88,4 +88,4 @@ text = f"{country}\n"
 for column in last_country_data.columns:
     value = last_country_data[column].values[0]
     text = f"{column}:      {value}\n"
-    st.write_stream(wrete_stream_text(text))
+    st.write_stream(write_stream_text(text))
