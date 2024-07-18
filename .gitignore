@@ -4,3 +4,9 @@ env/
 .command/
 env/*
 .command/*
+__pycache__
+.idea
+__pycache__/
+.idea/
+__pycache__/
+.idea/
