@@ -237,7 +237,7 @@ st.title('Data Missing Analysis')
 
 col = st.columns(2)
 col[1].write('Without Clening data')
-col[0].write('With Clening data with predict')
+col[0].write('With Clening data by predict')
 
 cols = st.columns(2)
 
