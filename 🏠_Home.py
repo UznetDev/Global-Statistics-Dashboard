@@ -15,7 +15,7 @@ st.set_page_config(
 )
 
 
-if st.button("Predict NaN data", type="primary"):
+if st.sidebar.button("Predict NaN data", type="primary"):
     p_col = 'population'
     d_col = 'debt'
     g_col = 'GDP (current US$)'
@@ -77,7 +77,7 @@ pie_df = data[data['Year'] == 2021].groupby('continent')[p_col].sum().reset_inde
 pie_chart = px.pie(continent_population, 
                    names='continent', 
                    values=p_col, 
-                   title='Population Share by Continent',
+                   title=f'Population Share by Continent',
                    width=600, 
                    height=400)
 
@@ -91,8 +91,6 @@ histogram = px.histogram(pie_df,
                          height=400,
                          color='continent',
                          color_discrete_sequence=px.colors.qualitative.Set3)
-
-
 
 
 
