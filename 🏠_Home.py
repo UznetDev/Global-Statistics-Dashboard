@@ -3,6 +3,8 @@ import altair as alt
 import plotly.express as px
 from loader import data, data_2023
 from function import make_donut, write_stream_text, make_heatmap, abbreviate_number
+from sklearn.preprocessing import MinMaxScaler
+
 
 
 st.set_page_config(
@@ -16,12 +18,12 @@ st.set_page_config(
 if st.button("Predict NaN data", type="primary"):
     p_col = 'population'
     d_col = 'debt'
-    g_col = 'GDP (current US$'
+    g_col = 'GDP (current US$)'
 else:
-    p_col = 'Real population'
+    p_col = 'Real Population'
     d_col = 'real debt'
-    g_col = 'real GDP (current US$'
-    available_columns = ['Real Population', 'real debt', 'real GDP (current US$)']
+    g_col = 'real GDP (current US$)'
+    available_columns = [p_col, d_col, 'real GDP (current US$)']
 
 
 
@@ -34,16 +36,16 @@ st.header('World economics and :blue[population] :sunglasses:')
 text = "Global indicators of change in 2022 and 2023 in percentage"
 st.write_stream(write_stream_text(text, 0.2))
 
-d_2022 = data[data['Year'] == 2021]['debt'].sum()
-d_2023 = data[data['Year'] == 2023]['debt'].sum()
+d_2022 = data[data['Year'] == 2021][d_col].sum()
+d_2023 = data[data['Year'] == 2023][d_col].sum()
 d = round((d_2023 - d_2022) / d_2022 * 100, 2)
 
-g_2022 = data[data['Year'] == 2021]['GDP (current US$)'].sum()
-g_2023 = data[data['Year'] == 2023]['GDP (current US$)'].sum()
+g_2022 = data[data['Year'] == 2021][g_col].sum()
+g_2023 = data[data['Year'] == 2023][g_col].sum()
 g = round((g_2023 - g_2022) / g_2022 * 100, 2)
 
-p_2022 = data[data['Year'] == 2021]['population'].sum()
-p_2023 = data[data['Year'] == 2023]['population'].sum()
+p_2022 = data[data['Year'] == 2021][p_col].sum()
+p_2023 = data[data['Year'] == 2023][p_col].sum()
 p = round((p_2023 - p_2022) / p_2022 * 100, 2)
 
 
@@ -62,19 +64,19 @@ with col2:
     st.altair_chart(donut_chart_debt)
 
 with col3:
-    st.write('GDP (current US$)')
-    donut_chart_gdp = make_donut(g, 'GDP (current US$)')
+    st.write(g_col)
+    donut_chart_gdp = make_donut(g, g_col)
     st.altair_chart(donut_chart_gdp)
 
 
 
-continent_population = data.groupby('continent')['population'].sum().reset_index()
-pie_df = data[data['Year'] == 2021].groupby('continent')['population'].sum().reset_index()
+continent_population = data.groupby('continent')[p_col].sum().reset_index()
+pie_df = data[data['Year'] == 2021].groupby('continent')[p_col].sum().reset_index()
 
 
 pie_chart = px.pie(continent_population, 
                    names='continent', 
-                   values='population', 
+                   values=p_col, 
                    title='Population Share by Continent',
                    width=600, 
                    height=400)
@@ -82,7 +84,7 @@ pie_chart = px.pie(continent_population,
 
 histogram = px.histogram(pie_df,
                          x='continent', 
-                         y='population', 
+                         y=p_col, 
                          histfunc='avg', 
                          title='Average Population by Continent in 2021',
                          width=800, 
@@ -110,24 +112,24 @@ with col2:
 
 #-----------------------------------------------------------------------------------------------------
 
-top_10_gdp_countries = data[data['Year'] == 2023].groupby('Country Name')['GDP (current US$)'].mean().reset_index().sort_values('GDP (current US$)')
+top_10_gdp_countries = data[data['Year'] == 2023].groupby('Country Name')[g_col].mean().reset_index().sort_values(g_col)
 
 
 fig_top_10 = px.bar(top_10_gdp_countries.head(20), 
                     x='Country Name', 
-                    y='GDP (current US$)', 
+                    y=g_col, 
                     title='Top 10 Countries by GDP (current US$)', 
-                    labels={'Country Name': 'Country', 'GDP (current US$)': 'GDP (current US$)'}, 
-                    color='GDP (current US$)',
+                    labels={'Country Name': 'Country', g_col: g_col}, 
+                    color=g_col,
                     color_continuous_scale=px.colors.sequential.YlOrRd)
 
 
 if 'continent' in data.columns:
-    fig_continent = px.histogram(data.sort_values('GDP (current US$)'), 
+    fig_continent = px.histogram(data.sort_values(g_col), 
                                  x='continent', 
-                                 y='GDP (current US$)', 
+                                 y=g_col, 
                                  title='GDP (current US$) by Continent', 
-                                 labels={'Continent': 'Continent', 'GDP (current US$)': 'GDP (current US$)'}, 
+                                 labels={'Continent': 'Continent', g_col: g_col}, 
                                  color='continent',
                                  color_discrete_sequence=px.colors.qualitative.Set3)
 else:
@@ -137,15 +139,25 @@ st.title('GDP Analysis')
 cols = st.columns(2)
 cols[0].plotly_chart(fig_top_10, use_container_width=True)
 
-year_min = 1970
-year_max = 2023
-year_range = cols[0].slider("Select Year Range", min_value=year_min, max_value=year_max, value=(year_min, year_max))
 
 
 if fig_continent:
     cols[1].plotly_chart(fig_continent, use_container_width=True)
 else:
     st.write("Data not found!")
+
+
+st.warning('The average population, debt, and GDP (current US$) by year of the world.')
+col =[p_col, d_col, g_col]
+scaler = MinMaxScaler()
+my_data = data.groupby('Year')[col].mean().reset_index()
+my_data[col] = scaler.fit_transform(my_data[col])
+
+fig = px.line(my_data, x="Year", y=my_data.columns, 
+                    title=f"",
+                    labels={"value": "Normalizations Value", "variable": "Indicator"})
+
+st.plotly_chart(fig)
 
 #-------------------------------------------------------------------------------------------------
 
@@ -177,17 +189,17 @@ with col2:
     year_min = 1970
     year_max = 2023
     year_range = st.slider("Select Year Range for headmap", min_value=year_min, max_value=year_max, value=(2010, year_max))
-
+    st.write('Population by short region and year')
     my_data = data[(data['Year'] >= year_range[0]) & (data['Year'] <= year_range[1])]
 
-    my_data['Short Population'] = my_data['population'].agg(abbreviate_number)
+    my_data['Short Population'] = my_data[p_col].agg(abbreviate_number)
 
-    heatmap = make_heatmap(my_data, 'Year', 'sub_region', 'population', selected_color_theme)
+    heatmap = make_heatmap(my_data, 'Year', 'sub_region', p_col, selected_color_theme)
     st.altair_chart(heatmap, use_container_width=True)
 
 
 
-
+st.write('Dataframe')
 st.dataframe(data.head())
 
 
@@ -226,8 +238,8 @@ for column in columns_to_check:
 st.title('Data Missing Analysis')
 
 col = st.columns(2)
-col[0].write('Without Clening data')
-col[1].write('With Clening data')
+col[1].write('Without Clening data')
+col[0].write('With Clening data with predict')
 
 cols = st.columns(2)
 
