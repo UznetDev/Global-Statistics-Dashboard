@@ -166,6 +166,7 @@ try:
                 'Urban_population',
                 'Forested Area (%)'
                 ]
+        st.write(f"Here is the percentage ratio of {country}'s average value compared to the world.")
 
         ln = len(n_cols)
         cols1 = st.columns(ln)
