@@ -97,14 +97,6 @@ histogram = px.histogram(pie_df,
 text = "Regional and country population rankings and shares."
 st.write_stream(write_stream_text(text, 0.2))
 
-# text = ""
-# for i in [p_col, d_col, g_col]:
-#     text += f"Mean: {data[i].mean()} \n STD: {data[i].std()}\n\n"
-
-
-# st.write(text)
-# st.write(data.shape)
-
 
 col1, col2 = st.columns(2, gap='small')
 
@@ -227,11 +219,14 @@ for column in columns_to_check:
     counts = col_data.value_counts().reset_index()
     counts.columns = ['data_exists', 'count']
     counts['data_exists'] = counts['data_exists'].map({False: 'Data Exist', True: 'No Data'})
-
-    pie_chart = px.pie(counts, 
+    mean = abbreviate_number(data[column].mean())
+    std = abbreviate_number(data[column].std())
+    max = abbreviate_number(data[column].max())
+    text = f'Mean: {mean}<br>STD: {std}<br>Max:  {max}'
+    pie_chart = px.pie(counts,  
                        names='data_exists', 
                        values='count', 
-                       title=column,
+                       title=f'{column} :<br>{text}',
                        color='data_exists',
                        color_discrete_map=color_discrete_map,
                        width=400, 
