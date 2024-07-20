@@ -23,16 +23,16 @@ The Global Statistics Dashboard is a comprehensive tool designed to provide insi
    ```
 3. Create a virtual environment:
    ```sh
-   python -m venv venv
+   python -m venv env
    ```
 4. Activate the virtual environment:
    - On Windows:
      ```sh
-     venv\Scripts\activate
+     env\Scripts\activate
      ```
    - On macOS and Linux:
      ```sh
-     source venv/bin/activate
+     source env/bin/activate
      ```
 5. Install the necessary libraries:
    ```sh

@@ -97,6 +97,15 @@ histogram = px.histogram(pie_df,
 text = "Regional and country population rankings and shares."
 st.write_stream(write_stream_text(text, 0.2))
 
+# text = ""
+# for i in [p_col, d_col, g_col]:
+#     text += f"Mean: {data[i].mean()} \n STD: {data[i].std()}\n\n"
+
+
+# st.write(text)
+# st.write(data.shape)
+
+
 col1, col2 = st.columns(2, gap='small')
 
 df_selected_year_sorted = data_2023.sort_values('Population', ascending=False)[['Population', 'Country']]
@@ -110,7 +119,7 @@ with col2:
 
 #-----------------------------------------------------------------------------------------------------
 
-top_10_gdp_countries = data[data['Year'] == 2023].groupby('Country Name')[g_col].mean().reset_index().sort_values(g_col)
+top_10_gdp_countries = data[(data['Year'] == 2023) & (data[g_col].isna())].groupby('Country Name')[g_col].mean().reset_index().sort_values(g_col)
 
 
 fig_top_10 = px.bar(top_10_gdp_countries.head(20), 
@@ -122,16 +131,16 @@ fig_top_10 = px.bar(top_10_gdp_countries.head(20),
                     color_continuous_scale=px.colors.sequential.YlOrRd)
 
 
-if 'continent' in data.columns:
-    fig_continent = px.histogram(data.sort_values(g_col), 
+# if 'continent' in data.columns:
+fig_continent = px.histogram(data.sort_values(g_col), 
                                  x='continent', 
                                  y=g_col, 
                                  title='GDP (current US$) by Continent', 
                                  labels={'Continent': 'Continent', g_col: g_col}, 
                                  color='continent',
                                  color_discrete_sequence=px.colors.qualitative.Set3)
-else:
-    fig_continent = None
+# else:
+#     fig_continent = None
 
 st.title('GDP Analysis')
 cols = st.columns(2)
@@ -139,10 +148,9 @@ cols[0].plotly_chart(fig_top_10, use_container_width=True)
 
 
 
-if fig_continent:
-    cols[1].plotly_chart(fig_continent, use_container_width=True)
-else:
-    st.write("Data not found!")
+# if fig_continent:
+cols[1].plotly_chart(fig_continent, use_container_width=True)
+
 
 
 st.warning('The average population, debt, and GDP (current US$) by year of the world.')
@@ -234,10 +242,13 @@ for column in columns_to_check:
 
 
 st.title('Data Missing Analysis')
+st.dataframe(data.describe())
 
 col = st.columns(2)
 col[1].write('Without Clening data')
 col[0].write('With Clening data by predict')
+
+
 
 cols = st.columns(2)
 
