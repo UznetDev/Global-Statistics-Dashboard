@@ -50,7 +50,7 @@ This will start the application, and you can view it in your web browser by navi
 ## Project Structure
 
 - `.gitignore`: Specifies files and directories to be ignored by git.
-- `build_data.ipynb`: Jupyter Notebook for building and processing the dataset.
+- `build_data.ipynb`: Jupyter Notebook for building, cleaning and processing the dataset.
 - `dataset/`: Directory containing the dataset files used for the dashboard.
 - `function.py`: Contains functions used across the project.
 - `🏠_Home.py`: The main script to run the web application.
