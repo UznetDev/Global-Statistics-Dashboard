@@ -37,15 +37,15 @@ text = "Global indicators of change in 2022 and 2023 in percentage"
 st.write_stream(write_stream_text(text, 0.2))
 
 d_2022 = data[data['Year'] == 2021][d_col].sum()
-d_2023 = data[data['Year'] == 2023][d_col].sum()
+d_2023 = data[data['Year'] == 2022][d_col].sum()
 d = round((d_2023 - d_2022) / d_2022 * 100, 2)
 
 g_2022 = data[data['Year'] == 2021][g_col].sum()
-g_2023 = data[data['Year'] == 2023][g_col].sum()
+g_2023 = data[data['Year'] == 2022][g_col].sum()
 g = round((g_2023 - g_2022) / g_2022 * 100, 2)
 
 p_2022 = data[data['Year'] == 2021][p_col].sum()
-p_2023 = data[data['Year'] == 2023][p_col].sum()
+p_2023 = data[data['Year'] == 2022][p_col].sum()
 p = round((p_2023 - p_2022) / p_2022 * 100, 2)
 
 
